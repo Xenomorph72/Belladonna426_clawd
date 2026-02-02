@@ -1,4 +1,4 @@
-// Belladonna Board - Main Application
+// Belladonna Board - Main Application (Browser-Compatible)
 
 class BelladonnaBoard {
     constructor() {
@@ -64,7 +64,7 @@ class BelladonnaBoard {
             {
                 id: 'task-4',
                 section: 'film426',
-                status: 'backlog',
+                status: 'done',
                 title: 'Build Belladonna Board App',
                 description: 'Shared Kanban board for FILM426 and Tesco tasks.',
                 assignee: 'belladonna',
@@ -112,6 +112,8 @@ class BelladonnaBoard {
         
         columns.forEach(status => {
             const column = document.getElementById(status);
+            if (!column) return;
+            
             const taskList = column.querySelector('.task-list');
             const countSpan = column.querySelector('.task-count');
             
@@ -185,34 +187,49 @@ class BelladonnaBoard {
         });
 
         // Close modal
-        document.getElementById('closeModal').addEventListener('click', () => {
-            this.closeModal();
-        });
+        const closeBtn = document.getElementById('closeModal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.closeModal();
+            });
+        }
 
         // Close modal on backdrop click
-        document.getElementById('taskModal').addEventListener('click', (e) => {
-            if (e.target.id === 'taskModal') {
-                this.closeModal();
-            }
-        });
+        const modal = document.getElementById('taskModal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target.id === 'taskModal') {
+                    this.closeModal();
+                }
+            });
+        }
 
         // Form submission
-        document.getElementById('taskForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveTask();
-        });
+        const form = document.getElementById('taskForm');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.saveTask();
+            });
+        }
 
         // Delete task
-        document.getElementById('deleteTask').addEventListener('click', () => {
-            if (this.currentTaskId && confirm('Delete this task?')) {
-                this.deleteTask(this.currentTaskId);
-            }
-        });
+        const deleteBtn = document.getElementById('deleteTask');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                if (this.currentTaskId && confirm('Delete this task?')) {
+                    this.deleteTask(this.currentTaskId);
+                }
+            });
+        }
 
         // Add comment
-        document.getElementById('addComment').addEventListener('click', () => {
-            this.addComment();
-        });
+        const commentBtn = document.getElementById('addComment');
+        if (commentBtn) {
+            commentBtn.addEventListener('click', () => {
+                this.addComment();
+            });
+        }
 
         // Section toggle
         document.querySelectorAll('.section-btn').forEach(btn => {
@@ -225,9 +242,12 @@ class BelladonnaBoard {
         });
 
         // Sync button
-        document.getElementById('syncBtn').addEventListener('click', () => {
-            this.syncWithGit();
-        });
+        const syncBtn = document.getElementById('syncBtn');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', () => {
+                this.syncWithGit();
+            });
+        }
     }
 
     setupDragAndDrop() {
@@ -235,42 +255,57 @@ class BelladonnaBoard {
         const columns = document.querySelectorAll('.task-list');
 
         cards.forEach(card => {
-            card.addEventListener('dragstart', (e) => {
-                card.classList.add('dragging');
-                e.dataTransfer.setData('text/plain', card.dataset.taskId);
-            });
-
-            card.addEventListener('dragend', () => {
-                card.classList.remove('dragging');
-            });
+            // Remove old listeners to prevent duplicates
+            card.removeEventListener('dragstart', this.handleDragStart);
+            card.removeEventListener('dragend', this.handleDragEnd);
+            
+            card.addEventListener('dragstart', this.handleDragStart.bind(this));
+            card.addEventListener('dragend', this.handleDragEnd.bind(this));
         });
 
         columns.forEach(column => {
-            column.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                const afterElement = this.getDragAfterElement(column, e.clientY);
-                const dragging = document.querySelector('.dragging');
-                if (afterElement == null) {
-                    column.appendChild(dragging);
-                } else {
-                    column.insertBefore(dragging, afterElement);
-                }
-            });
-
-            column.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const taskId = e.dataTransfer.getData('text/plain');
-                const newStatus = column.id;
-                
-                // Update task status
-                const task = this.tasks.find(t => t.id === taskId);
-                if (task) {
-                    task.status = newStatus;
-                    this.saveTasks();
-                    this.showToast('Task moved to ' + newStatus, 'success');
-                }
-            });
+            column.removeEventListener('dragover', this.handleDragOver);
+            column.removeEventListener('drop', this.handleDrop);
+            
+            column.addEventListener('dragover', this.handleDragOver.bind(this));
+            column.addEventListener('drop', this.handleDrop.bind(this));
         });
+    }
+
+    handleDragStart(e) {
+        this.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', this.dataset.taskId);
+    }
+
+    handleDragEnd(e) {
+        this.classList.remove('dragging');
+    }
+
+    handleDragOver(e) {
+        e.preventDefault();
+        const afterElement = this.getDragAfterElement(this, e.clientY);
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+            if (afterElement == null) {
+                this.appendChild(dragging);
+            } else {
+                this.insertBefore(dragging, afterElement);
+            }
+        }
+    }
+
+    handleDrop(e) {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('text/plain');
+        const newStatus = this.id;
+        
+        // Update task status
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) {
+            task.status = newStatus;
+            this.saveTasks();
+            this.showToast('Task moved to ' + newStatus, 'success');
+        }
     }
 
     getDragAfterElement(container, y) {
@@ -327,7 +362,10 @@ class BelladonnaBoard {
     }
 
     closeModal() {
-        document.getElementById('taskModal').classList.remove('active');
+        const modal = document.getElementById('taskModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
         this.currentTaskId = null;
     }
 
@@ -358,7 +396,7 @@ class BelladonnaBoard {
                 comments: []
             };
             this.tasks.push(newTask);
-            this.showToast('Task created!', 'success');
+            this.show.tasks.push(newTaskToast('Task created!', 'success');
         }
 
         this.saveTasks();
@@ -414,38 +452,49 @@ class BelladonnaBoard {
         }
     }
 
-    // Git Sync
-    async syncWithGit() {
+    // Git Sync (Browser-Compatible: Download/Upload JSON)
+    syncWithGit() {
         const syncBtn = document.getElementById('syncBtn');
         syncBtn.classList.add('syncing');
         syncBtn.innerHTML = '<span class="sync-icon">🔄</span> Syncing...';
         
-        try {
-            // Export tasks to JSON file
-            const dataPath = '/home/manager/.openclaw/workspace/Belladonna426_clawd/belladonna-board/data/tasks.json';
-            
-            // Read current file content
-            const fs = await import('fs');
-            const tasksJson = JSON.stringify(this.tasks, null, 2);
-            fs.writeFileSync(dataPath, tasksJson);
-            
-            // Git commands
-            const { exec } = await import('child_process');
-            const { promisify } = await import('util');
-            const execAsync = promisify(exec);
-            
-            // Add, commit, push
-            await execAsync('cd /home/manager/.openclaw/workspace/Belladonna426_clawd && git add belladonna-board/data/tasks.json', { encoding: 'utf8' });
-            await execAsync('cd /home/manager/.openclaw/workspace/Belladonna426_clawd && git commit -m "Belladonna Board: Auto-sync ' + new Date().toISOString() + '"', { encoding: 'utf8' });
-            await execAsync('cd /home/manager/.openclaw/workspace/Belladonna426_clawd && git push', { encoding: 'utf8' });
-            
-            this.showToast('Synced with Git! ✅', 'success');
-        } catch (error) {
-            console.error('Sync error:', error);
-            this.showToast('Sync failed: ' + error.message, 'error');
-        } finally {
+        // For browser, we'll export tasks as JSON and show instructions
+        const tasksJson = JSON.stringify(this.tasks, null, 2);
+        
+        // Create downloadable file
+        const blob = new Blob([tasksJson], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'belladonna-board-data.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showToast('📥 Downloaded tasks.json - Send to Belladonna to sync!', 'success');
+        
+        setTimeout(() => {
             syncBtn.classList.remove('syncing');
             syncBtn.innerHTML = '<span class="sync-icon">🔄</span> Sync';
+        }, 1000);
+    }
+
+    // Import from JSON (for when Paul sends updates)
+    importFromJson(jsonData) {
+        try {
+            const importedTasks = JSON.parse(jsonData);
+            // Merge intelligently - keep tasks that exist, add new ones
+            importedTasks.forEach(importedTask => {
+                const existingIndex = this.tasks.findIndex(t => t.id === importedTask.id);
+                if (existingIndex >= 0) {
+                    this.tasks[existingIndex] = importedTask;
+                } else {
+                    this.tasks.push(importedTask);
+                }
+            });
+            this.saveTasks();
+            this.showToast('📤 Tasks imported from Belladonna!', 'success');
+        } catch (e) {
+            this.showToast('Import failed: Invalid JSON', 'error');
         }
     }
 
@@ -458,11 +507,27 @@ class BelladonnaBoard {
         
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 3000);
+        }, 4000);
     }
 }
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     window.board = new BelladonnaBoard();
+    
+    // Check for shared data in URL hash
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#import=')) {
+        try {
+            const encodedData = hash.substring(8);
+            const jsonData = decodeURIComponent(atob(encodedData));
+            window.board.importFromJson(jsonData);
+            window.location.hash = '';
+        } catch (e) {
+            console.error('Import error:', e);
+        }
+    }
 });
+
+// Export for use
+window.BelladonnaBoard = BelladonnaBoard;
