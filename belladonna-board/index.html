@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belladonna Board 🎬</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🖤</span>
+                <h1>Belladonna Board</h1>
+            </div>
+            <div class="header-controls">
+                <div class="section-toggle">
+                    <button class="section-btn active" data-section="all">All</button>
+                    <button class="section-btn" data-section="film426">🎬 FILM426</button>
+                    <button class="section-btn" data-section="tesco">🏪 Tesco</button>
+                    <button class="section-btn" data-section="sonic">🎵 Sonic</button>
+                </div>
+                <button class="sync-btn" id="syncBtn">
+                    <span class="sync-icon">🔄</span> Sync
+                </button>
+            </div>
+        </header>
+
+        <!-- Kanban Board -->
+        <div class="board">
+            <div class="column" data-status="backlog">
+                <div class="column-header">
+                    <h2>📋 Backlog</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="backlog"></div>
+                <button class="add-task-btn" data-status="backlog">+ Add Task</button>
+            </div>
+
+            <div class="column" data-status="inprogress">
+                <div class="column-header">
+                    <h2>🔥 In Progress</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="inprogress"></div>
+                <button class="add-task-btn" data-status="inprogress">+ Add Task</button>
+            </div>
+
+            <div class="column" data-status="review">
+                <div class="column-header">
+                    <h2>👁️ Review</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="review"></div>
+                <button class="add-task-btn" data-status="review">+ Add Task</button>
+            </div>
+
+            <div class="column" data-status="done">
+                <div class="column-header">
+                    <h2>✅ Done</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="done"></div>
+                <button class="add-task-btn" data-status="done">+ Add Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Task</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <input type="hidden" id="taskStatus">
+                
+                <div class="form-group">
+                    <label for="taskSection">Section</label>
+                    <select id="taskSection" required>
+                        <option value="film426">🎬 FILM426</option>
+                        <option value="tesco">🏪 Tesco</option>
+                        <option value="sonic">🎵 Sonic Cinema</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskAssignee">Assignee</label>
+                    <select id="taskAssignee">
+                        <option value="paul">👤 Paul</option>
+                        <option value="belladonna">🖤 Belladonna</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskTitle">Title</label>
+                    <input type="text" id="taskTitle" required placeholder="Task title...">
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3" placeholder="Task details..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDueDate">Due Date</label>
+                    <input type="date" id="taskDueDate">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-danger" id="deleteTask" style="display:none;">Delete</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="commentsSection" style="display:none;">
+                <h3>💬 Comments</h3>
+                <div class="comments-list" id="commentsList"></div>
+                <div class="comment-form">
+                    <textarea id="newComment" placeholder="Add a comment..."></textarea>
+                    <button type="button" class="btn btn-primary" id="addComment">Add Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
