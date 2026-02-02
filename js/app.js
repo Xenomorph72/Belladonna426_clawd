@@ -396,7 +396,7 @@ class BelladonnaBoard {
                 comments: []
             };
             this.tasks.push(newTask);
-            this.show.tasks.push(newTaskToast('Task created!', 'success');
+            this.showToast('Task created!', 'success');
         }
 
         this.saveTasks();
