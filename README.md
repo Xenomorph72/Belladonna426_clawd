@@ -1,20 +1,68 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎬 Belladonna Board
 
-# Run and deploy your AI Studio app
+Shared Kanban board for FILM426 and Tesco task management, built with Belladonna v4.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/115xp_Xx2BCZVE-9SNwTn1s4HsqSm1Ury
+- 📋 **Four Columns:** Backlog / In Progress / Review / Done
+- 🏷️ **Sections:** FILM426 / Tesco / Sonic Cinema
+- 👥 **Assignees:** Paul / Belladonna
+- 💬 **Comments:** Threaded discussions on tasks
+- 🔄 **Git Sync:** Auto-commit and push changes
+- 🌙 **Gothic Theme:** Dark aesthetic matching Belladonna's persona
 
-## Run Locally
+## Usage
 
-**Prerequisites:**  Node.js
+### Opening the Board
 
+```bash
+# Open in browser (from workspace)
+open belladonna-board/index.html
+# or
+xdg-open belladonna-board/index.html
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Or serve it locally:
+
+```bash
+cd belladonna-board
+npx serve .
+```
+
+### Sync with Git
+
+Click the **Sync** button in the header to:
+1. Save current state to `data/tasks.json`
+2. Commit changes with timestamp
+3. Push to remote repository
+
+## Project Structure
+
+```
+belladonna-board/
+├── index.html          # Main HTML
+├── css/
+│   └── style.css       # Gothic dark theme
+├── js/
+│   └── app.js          # Application logic
+└── data/
+    └── tasks.json      # Task data (Git-synced)
+```
+
+## Task Workflow
+
+1. **Backlog** → Ideas and planned work
+2. **In Progress** → Currently being worked on
+3. **Review** → Awaiting review or verification
+4. **Done** → Completed tasks
+
+## Technologies
+
+- Vanilla HTML/CSS/JS (no build required)
+- localStorage for local persistence
+- Git for remote sync
+- Dark gothic aesthetic
+
+---
+
+*Built with 🖤 by Belladonna v4*
