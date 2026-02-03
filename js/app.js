@@ -129,6 +129,16 @@ class BelladonnaBoard {
             // Render tasks
             taskList.innerHTML = filteredTasks.map(task => this.renderTaskCard(task)).join('');
             
+            // Add click handlers to task cards
+            taskList.querySelectorAll('.task-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Don't open modal if dragging
+                    if (card.classList.contains('dragging')) return;
+                    const taskId = card.dataset.taskId;
+                    this.openModal(taskId);
+                });
+            });
+            
             // Re-setup drag events for new cards
             this.setupDragAndDrop();
         });
@@ -273,23 +283,24 @@ class BelladonnaBoard {
     }
 
     handleDragStart(e) {
-        this.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', this.dataset.taskId);
+        e.currentTarget.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', e.currentTarget.dataset.taskId);
     }
 
     handleDragEnd(e) {
-        this.classList.remove('dragging');
+        e.currentTarget.classList.remove('dragging');
     }
 
     handleDragOver(e) {
         e.preventDefault();
-        const afterElement = this.getDragAfterElement(this, e.clientY);
+        const container = e.currentTarget;
+        const afterElement = this.getDragAfterElement(container, e.clientY);
         const dragging = document.querySelector('.dragging');
         if (dragging) {
             if (afterElement == null) {
-                this.appendChild(dragging);
+                container.appendChild(dragging);
             } else {
-                this.insertBefore(dragging, afterElement);
+                container.insertBefore(dragging, afterElement);
             }
         }
     }
@@ -297,7 +308,7 @@ class BelladonnaBoard {
     handleDrop(e) {
         e.preventDefault();
         const taskId = e.dataTransfer.getData('text/plain');
-        const newStatus = this.id;
+        const newStatus = e.currentTarget.id;
         
         // Update task status
         const task = this.tasks.find(t => t.id === taskId);
