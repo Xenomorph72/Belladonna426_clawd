@@ -7,7 +7,29 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="app-container">
+    <!-- Login Screen -->
+    <div id="login-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #071d24 0%, #0f3240 50%, #071d24 100%); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #0a2630; padding: 2rem; border-radius: 8px; border: 2px solid #025373; max-width: 400px; width: 90%; text-align: center;">
+            <h1 style="margin-bottom: 0.5rem;">🦞 Dash-Clawd</h1>
+            <p style="color: #888; margin-bottom: 2rem;">Secure Task Board</p>
+            
+            <div style="margin-bottom: 1rem;">
+                <input type="email" id="login-email" placeholder="Email" style="width: 100%; padding: 0.75rem; background: #071d24; border: 1px solid #1a4a5e; border-radius: 4px; color: #e0e0e0; font-size: 1rem;">
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 0.75rem; background: #071d24; border: 1px solid #1a4a5e; border-radius: 4px; color: #e0e0e0; font-size: 1rem;">
+            </div>
+            
+            <div id="login-error" style="color: #ff6b6b; margin-bottom: 1rem; font-size: 0.9rem;"></div>
+            
+            <button id="login-btn" style="width: 100%; padding: 0.75rem; background: #025373; border: none; border-radius: 4px; color: white; font-size: 1rem; cursor: pointer; font-weight: 600;">
+                🔒 Login
+            </button>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display: none;">
         <!-- Debug status -->
         <div id="debug-status" style="background: #ff6b6b; color: white; padding: 5px; text-align: center; font-size: 12px;">
             Checking JavaScript...
@@ -36,6 +58,9 @@
                 </button>
                 <button onclick="resetBoard()" style="background: #8b0000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;">
                     Reset
+                </button>
+                <button id="logout-btn" style="background: #2d1e5e; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; color: white;">
+                    Logout
                 </button>
             </div>
         </header>
@@ -148,6 +173,8 @@
                 </div>
             </div>
         </div>
+    </div>
+
     </div>
 
     <!-- Toast Notification -->

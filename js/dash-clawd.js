@@ -1,6 +1,7 @@
-// Dash-Clawd v3 - Firebase Real-Time Sync
+// Dash-Clawd v4 - Secure with Auth
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -16,10 +17,56 @@ const firebaseConfig = {
 // Initialize
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 let tasks = [];
 let currentSection = 'all';
 let unsubscribe = null;
+let currentUser = null;
+
+// Auth state listener
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    showApp();
+    loadTasksFromFirebase();
+  } else {
+    showLogin();
+  }
+});
+
+// Show login screen
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-container').style.display = 'none';
+}
+
+// Show app
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-container').style.display = 'block';
+}
+
+// Login function
+async function login() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const errorDiv = document.getElementById('login-error');
+  
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    errorDiv.textContent = '';
+  } catch (error) {
+    errorDiv.textContent = 'Login failed: ' + error.message;
+  }
+}
+
+// Logout function
+async function logout() {
+  await signOut(auth);
+  if (unsubscribe) unsubscribe();
+  tasks = [];
+}
 
 // Load tasks from Firestore with real-time sync
 function loadTasksFromFirebase() {
@@ -41,11 +88,10 @@ function loadTasksFromFirebase() {
     }
     
     const debug = document.getElementById('debug-status');
-    if (debug) debug.textContent = `Tasks: ${tasks.length} | Firebase: ✅`;
+    if (debug) debug.textContent = `Tasks: ${tasks.length} | 🔒 ${currentUser?.email || 'Unknown'}`;
   }, (error) => {
     console.error('Firebase error:', error);
-    showToast('Sync failed - using local', 'error');
-    loadFromLocalStorage();
+    showToast('Sync error - check login', 'error');
   });
 }
 
@@ -88,19 +134,6 @@ async function deleteTaskFromFirebase(taskId) {
   await deleteDoc(doc(db, 'tasks', taskId));
 }
 
-// LocalStorage fallback
-function loadFromLocalStorage() {
-  const saved = localStorage.getItem('dash-clawd-tasks');
-  if (saved) {
-    tasks = JSON.parse(saved);
-    renderBoard();
-  }
-}
-
-function saveToLocalStorage() {
-  localStorage.setItem('dash-clawd-tasks', JSON.stringify(tasks));
-}
-
 // Toast notifications
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
@@ -124,10 +157,26 @@ function showToast(message, type = 'success') {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-  const debug = document.getElementById('debug-status');
-  if (debug) debug.textContent = 'Connecting to Firebase...';
+  // Login button
+  const loginBtn = document.getElementById('login-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', login);
+  }
   
-  loadTasksFromFirebase();
+  // Logout button
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', logout);
+  }
+  
+  // Enter key on password
+  const passwordInput = document.getElementById('login-password');
+  if (passwordInput) {
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') login();
+    });
+  }
+  
   setupEventListeners();
 });
 
@@ -136,7 +185,7 @@ function renderBoard() {
   const columns = ['backlog', 'inprogress', 'review', 'done'];
   
   const countDebug = document.getElementById('task-count');
-  if (countDebug) countDebug.textContent = `Tasks: ${tasks.length} | Firebase: ✅`;
+  if (countDebug) countDebug.textContent = `Tasks: ${tasks.length} | 🔒 Secured`;
   
   columns.forEach(status => {
     const taskList = document.getElementById(status);
@@ -208,10 +257,7 @@ function setupEventListeners() {
   // Delete button
   const deleteBtn = document.getElementById('deleteTask');
   if (deleteBtn) {
-    console.log('Delete button found, attaching listener');
     deleteBtn.addEventListener('click', deleteTask);
-  } else {
-    console.log('Delete button NOT found!');
   }
 }
 
@@ -289,28 +335,13 @@ async function saveTask() {
 }
 
 async function deleteTask() {
-  console.log('Delete clicked!');
   const taskId = document.getElementById('taskId').value;
-  console.log('Task ID:', taskId);
-  if (!taskId) {
-    console.log('No task ID');
-    return;
-  }
+  if (!taskId) return;
   
-  if (!confirm('Delete this task?')) {
-    console.log('Cancelled');
-    return;
-  }
+  if (!confirm('Delete this task?')) return;
   
-  console.log('Deleting...');
-  try {
-    await deleteTaskFromFirebase(taskId);
-    showToast('Task deleted', 'info');
-    console.log('Deleted successfully');
-  } catch (err) {
-    console.error('Delete failed:', err);
-    showToast('Delete failed', 'error');
-  }
+  await deleteTaskFromFirebase(taskId);
+  showToast('Task deleted', 'info');
   closeTaskModal();
 }
 
@@ -340,4 +371,4 @@ function escapeHtml(text) {
 window.openTaskModal = openTaskModal;
 window.closeTaskModal = closeTaskModal;
 
-console.log('Dash-Clawd v3 loaded');
+console.log('Dash-Clawd v4 (Secure) loaded');
