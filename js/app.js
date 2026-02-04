@@ -93,6 +93,61 @@ class BelladonnaBoard {
                 dueDate: null,
                 createdAt: new Date().toISOString(),
                 comments: []
+            },
+            {
+                id: 'task-7',
+                section: 'film426',
+                status: 'backlog',
+                title: 'Review LTX2 Workflow Update',
+                description: 'Normalising Sampler & Local AI Prompt Enhancer. From email.',
+                assignee: 'paul',
+                dueDate: null,
+                createdAt: new Date().toISOString(),
+                comments: []
+            },
+            {
+                id: 'task-8',
+                section: 'film426',
+                status: 'backlog',
+                title: 'Review Z-Image Extra Details + FX',
+                description: 'ComfyUI workflow for extra details and effects. From email.',
+                assignee: 'paul',
+                dueDate: null,
+                createdAt: new Date().toISOString(),
+                comments: []
+            },
+            {
+                id: 'task-9',
+                section: 'film426',
+                status: 'backlog',
+                title: 'Review Z-IMAGE BASE workflow',
+                description: 'Text to image AI workflow, <8GB VRAM required. From email.',
+                assignee: 'paul',
+                dueDate: null,
+                createdAt: new Date().toISOString(),
+                comments: []
+            },
+            {
+                id: 'task-10',
+                section: 'film426',
+                status: 'backlog',
+                title: 'Review Z-IMAGE BASE ULTRA workflow',
+                description: 'New text to image AI king workflow. From email.',
+                assignee: 'paul',
+                dueDate: null,
+                createdAt: new Date().toISOString(),
+                comments: []
+            },
+            {
+                id: 'task-11',
+                section: 'film426',
+                status: 'backlog',
+                title: 'Check Ace-Step 1.5 Early Access',
+                description: 'Early access to Ace-Step 1.5 model. From email.',
+                assignee: 'paul',
+                dueDate: null,
+                createdAt: new Date().toISOString(),
+                comments: []
             }
         ];
     }
