@@ -19,9 +19,12 @@ let currentSection = 'all';
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    const debug = document.getElementById('debug-status');
+    if (debug) debug.textContent = 'JavaScript loaded!';
     console.log('Belladonna Board loading...');
     renderBoard();
     setupEventListeners();
+    if (debug) debug.textContent = 'Board rendered!';
 });
 
 function renderBoard() {
