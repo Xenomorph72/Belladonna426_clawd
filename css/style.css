@@ -1,15 +1,15 @@
-/* Belladonna Board - Gothic Dark Theme */
+/* Belladonna Board - Paul's Color Palette */
 :root {
-    --bg-primary: #0d0d0d;
-    --bg-secondary: #1a1a1a;
-    --bg-card: #252525;
-    --bg-hover: #2a2a2a;
-    --accent-crimson: #8b0000;
+    --bg-primary: #071d24;
+    --bg-secondary: #0a2630;
+    --bg-card: #0f3240;
+    --bg-hover: #144257;
+    --accent-purple: #2d1e5e;
+    --accent-teal: #025373;
     --accent-gold: #d4af37;
-    --accent-purple: #4a0080;
     --text-primary: #e0e0e0;
     --text-secondary: #888;
-    --border-color: #333;
+    --border-color: #1a4a5e;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     --radius: 8px;
 }
@@ -25,7 +25,7 @@ body {
     background: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
-    background: linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 50%, #0d0d0d 100%);
+    background: linear-gradient(135deg, #071d24 0%, #0f3240 50%, #071d24 100%);
 }
 
 /* Header */
@@ -35,7 +35,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--accent-crimson);
+    border-bottom: 2px solid var(--accent-teal);
     box-shadow: var(--shadow);
 }
 
@@ -58,7 +58,7 @@ body {
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    background: linear-gradient(90deg, var(--accent-gold), var(--accent-crimson));
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -95,7 +95,7 @@ body {
 }
 
 .section-btn.active {
-    background: var(--accent-crimson);
+    background: var(--accent-teal);
     color: white;
 }
 
@@ -113,7 +113,7 @@ body {
 }
 
 .sync-btn:hover {
-    background: #6a00b0;
+    background: var(--accent-teal);
     transform: translateY(-2px);
 }
 
@@ -159,7 +159,7 @@ body {
 }
 
 .task-count {
-    background: var(--accent-crimson);
+    background: var(--accent-teal);
     color: white;
     padding: 0.2rem 0.6rem;
     border-radius: 20px;
@@ -187,7 +187,7 @@ body {
 }
 
 .task-card:hover {
-    border-color: var(--accent-crimson);
+    border-color: var(--accent-teal);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
 }
@@ -227,26 +227,14 @@ body {
     color: white;
 }
 
-.task-actions {
-    display: flex;
-    gap: 5px;
-    margin-top: 8px;
-}
-
-.move-btn {
-    background: var(--bg-secondary);
-    border: 1px solid var(--accent-crimson);
-    color: var(--text-primary);
-    padding: 4px 8px;
+.task-status-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 6px;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s;
-}
-
-.move-btn:hover {
-    background: var(--accent-crimson);
-    color: white;
+    margin-top: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
 }
 
 .task-assignee {
@@ -285,7 +273,7 @@ body {
 }
 
 .task-due.overdue {
-    color: var(--accent-crimson);
+    color: var(--accent-teal);
 }
 
 .task-comments {
@@ -337,7 +325,7 @@ body {
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    border: 1px solid var(--accent-crimson);
+    border: 1px solid var(--accent-teal);
     box-shadow: 0 0 50px rgba(139, 0, 0, 0.3);
 }
 
@@ -365,7 +353,7 @@ body {
 }
 
 .close-btn:hover {
-    color: var(--accent-crimson);
+    color: var(--accent-teal);
 }
 
 #taskForm {
@@ -396,6 +384,21 @@ body {
     transition: border-color 0.3s ease;
 }
 
+/* Status dropdown - prominent styling */
+.form-group:first-of-type select {
+    border: 2px solid var(--accent-teal);
+    background: var(--bg-card);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.form-group:first-of-type label {
+    color: var(--accent-teal);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -420,7 +423,7 @@ body {
 }
 
 .btn-primary {
-    background: var(--accent-crimson);
+    background: var(--accent-teal);
     color: white;
 }
 
@@ -430,12 +433,12 @@ body {
 
 .btn-danger {
     background: transparent;
-    color: var(--accent-crimson);
-    border: 1px solid var(--accent-crimson);
+    color: var(--accent-teal);
+    border: 1px solid var(--accent-teal);
 }
 
 .btn-danger:hover {
-    background: var(--accent-crimson);
+    background: var(--accent-teal);
     color: white;
 }
 
@@ -518,7 +521,7 @@ body {
 }
 
 .toast.error {
-    background: var(--accent-crimson);
+    background: var(--accent-teal);
 }
 
 /* Responsive */

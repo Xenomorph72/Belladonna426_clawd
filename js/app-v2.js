@@ -95,10 +95,7 @@ function renderBoard() {
                     <span class="task-assignee">${getAssigneeLabel(task.assignee)}</span>
                 </div>
                 <div class="task-title">${escapeHtml(task.title)}</div>
-                <div class="task-actions">
-                    ${status !== 'backlog' ? `<button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}', 'prev')">←</button>` : ''}
-                    ${status !== 'done' ? `<button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}', 'next')">→</button>` : ''}
-                </div>
+                <div class="task-status-badge">${getStatusLabel(task.status)}</div>
             </div>
         `).join('');
         
@@ -233,6 +230,11 @@ function getSectionLabel(section) {
 function getAssigneeLabel(assignee) {
     const labels = { belladonna: '🖤 Belladonna', paul: '👤 Paul' };
     return labels[assignee] || assignee;
+}
+
+function getStatusLabel(status) {
+    const labels = { backlog: '📋 Backlog', inprogress: '🔥 In Progress', review: '👁️ Review', done: '✅ Done' };
+    return labels[status] || status;
 }
 
 function escapeHtml(text) {

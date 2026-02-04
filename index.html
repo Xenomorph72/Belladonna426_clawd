@@ -89,7 +89,16 @@
             </div>
             <form id="taskForm">
                 <input type="hidden" id="taskId">
-                <input type="hidden" id="taskStatus">
+                
+                <div class="form-group">
+                    <label for="taskStatus">📍 Status</label>
+                    <select id="taskStatus" required>
+                        <option value="backlog">📋 Backlog</option>
+                        <option value="inprogress">🔥 In Progress</option>
+                        <option value="review">👁️ Review</option>
+                        <option value="done">✅ Done</option>
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <label for="taskSection">Section</label>
@@ -125,7 +134,7 @@
 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-danger" id="deleteTask" style="display:none;">Delete</button>
-                    <button type="submit" class="btn btn-primary">Save Task</button>
+                    <button type="submit" class="btn btn-primary">💾 Save</button>
                 </div>
             </form>
 
