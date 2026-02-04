@@ -39,6 +39,8 @@ let currentSection = 'all';
 // Save to localStorage
 function saveTasks() {
     localStorage.setItem('belladonna-board-tasks', JSON.stringify(tasks));
+    // Optional: uncomment to see toast on every save
+    // showToast('Saved!', 'success');
     console.log('Tasks saved to localStorage');
 }
 
@@ -152,6 +154,7 @@ function addNewTask(status) {
     
     saveTasks();
     renderBoard();
+    showToast('Task added!', 'success');
 }
 
 function openTaskModal(taskId) {
@@ -207,6 +210,7 @@ function saveTask() {
     saveTasks();
     closeTaskModal();
     renderBoard();
+    showToast(taskId ? 'Task updated!' : 'Task created!', 'success');
 }
 
 function getSectionLabel(section) {
@@ -230,6 +234,7 @@ function moveTask(taskId, direction) {
     if (!task) return;
     
     const statusOrder = ['backlog', 'inprogress', 'review', 'done'];
+    const statusLabels = { backlog: 'Backlog', inprogress: 'In Progress', review: 'Review', done: 'Done' };
     const currentIndex = statusOrder.indexOf(task.status);
     
     if (direction === 'next' && currentIndex < statusOrder.length - 1) {
@@ -240,16 +245,34 @@ function moveTask(taskId, direction) {
     
     saveTasks();
     renderBoard();
-    console.log('Task moved to:', task.status);
+    showToast(`Moved to ${statusLabels[task.status]}`, 'success');
 }
 
 console.log('Belladonna Board v2 loaded');
+
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+        color: white;
+        padding: 10px 20px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        font-size: 14px;
+        animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 
 function resetBoard() {
     if (confirm('Reset all tasks to defaults? This cannot be undone.')) {
         localStorage.removeItem('belladonna-board-tasks');
         tasks = loadTasks();
         renderBoard();
-        console.log('Board reset');
+        showToast('Board reset to defaults', 'info');
     }
 }
