@@ -1,21 +1,46 @@
 // Belladonna Board v2 - Simplified and Working
 
-// Tasks data - stored in memory (will add localStorage later)
-let tasks = [
-    { id: '1', title: 'Fix heartbeat scheduler bug', status: 'backlog', section: 'film426', assignee: 'belladonna' },
-    { id: '2', title: 'Set up YouTube API', status: 'inprogress', section: 'film426', assignee: 'belladonna' },
-    { id: '3', title: 'Integrate ElevenLabs Voice', status: 'backlog', section: 'film426', assignee: 'belladonna' },
-    { id: '4', title: 'Build Belladonna Board App', status: 'done', section: 'film426', assignee: 'belladonna' },
-    { id: '5', title: 'Whoosh Tracker Development', status: 'backlog', section: 'tesco', assignee: 'paul' },
-    { id: '6', title: 'Set up Gemini RAG', status: 'backlog', section: 'film426', assignee: 'paul' },
-    { id: '7', title: 'Review LTX2 Workflow Update', status: 'backlog', section: 'film426', assignee: 'paul' },
-    { id: '8', title: 'Review Z-Image Extra Details + FX', status: 'backlog', section: 'film426', assignee: 'paul' },
-    { id: '9', title: 'Review Z-IMAGE BASE workflow', status: 'backlog', section: 'film426', assignee: 'paul' },
-    { id: '10', title: 'Review Z-IMAGE BASE ULTRA', status: 'backlog', section: 'film426', assignee: 'paul' },
-    { id: '11', title: 'Check Ace-Step 1.5 Early Access', status: 'backlog', section: 'film426', assignee: 'paul' }
-];
+let tasks = [];
 
+// Load from localStorage or use defaults
+function loadTasks() {
+    try {
+        const saved = localStorage.getItem('belladonna-board-tasks');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed.length > 0) {
+                console.log('Loaded from localStorage:', parsed.length, 'tasks');
+                return parsed;
+            }
+        }
+    } catch (e) {
+        console.error('Error loading tasks:', e);
+    }
+    
+    // Default tasks
+    return [
+        { id: '1', title: 'Fix heartbeat scheduler bug', status: 'backlog', section: 'film426', assignee: 'belladonna' },
+        { id: '2', title: 'Set up YouTube API', status: 'inprogress', section: 'film426', assignee: 'belladonna' },
+        { id: '3', title: 'Integrate ElevenLabs Voice', status: 'backlog', section: 'film426', assignee: 'belladonna' },
+        { id: '4', title: 'Build Belladonna Board App', status: 'done', section: 'film426', assignee: 'belladonna' },
+        { id: '5', title: 'Whoosh Tracker Development', status: 'backlog', section: 'tesco', assignee: 'paul' },
+        { id: '6', title: 'Set up Gemini RAG', status: 'backlog', section: 'film426', assignee: 'paul' },
+        { id: '7', title: 'Review LTX2 Workflow Update', status: 'backlog', section: 'film426', assignee: 'paul' },
+        { id: '8', title: 'Review Z-Image Extra Details + FX', status: 'backlog', section: 'film426', assignee: 'paul' },
+        { id: '9', title: 'Review Z-IMAGE BASE workflow', status: 'backlog', section: 'film426', assignee: 'paul' },
+        { id: '10', title: 'Review Z-IMAGE BASE ULTRA', status: 'backlog', section: 'film426', assignee: 'paul' },
+        { id: '11', title: 'Check Ace-Step 1.5 Early Access', status: 'backlog', section: 'film426', assignee: 'paul' }
+    ];
+}
+
+tasks = loadTasks();
 let currentSection = 'all';
+
+// Save to localStorage
+function saveTasks() {
+    localStorage.setItem('belladonna-board-tasks', JSON.stringify(tasks));
+    console.log('Tasks saved to localStorage');
+}
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -125,6 +150,7 @@ function addNewTask(status) {
         assignee: 'paul'
     });
     
+    saveTasks();
     renderBoard();
 }
 
@@ -178,6 +204,7 @@ function saveTask() {
         });
     }
     
+    saveTasks();
     closeTaskModal();
     renderBoard();
 }
@@ -211,8 +238,18 @@ function moveTask(taskId, direction) {
         task.status = statusOrder[currentIndex - 1];
     }
     
+    saveTasks();
     renderBoard();
     console.log('Task moved to:', task.status);
 }
 
 console.log('Belladonna Board v2 loaded');
+
+function resetBoard() {
+    if (confirm('Reset all tasks to defaults? This cannot be undone.')) {
+        localStorage.removeItem('belladonna-board-tasks');
+        tasks = loadTasks();
+        renderBoard();
+        console.log('Board reset');
+    }
+}
