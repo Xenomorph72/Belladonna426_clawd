@@ -227,6 +227,28 @@ body {
     color: white;
 }
 
+.task-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.move-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-crimson);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.move-btn:hover {
+    background: var(--accent-crimson);
+    color: white;
+}
+
 .task-assignee {
     font-size: 0.75rem;
     color: var(--text-secondary);

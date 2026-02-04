@@ -56,6 +56,10 @@ function renderBoard() {
                     <span class="task-assignee">${getAssigneeLabel(task.assignee)}</span>
                 </div>
                 <div class="task-title">${escapeHtml(task.title)}</div>
+                <div class="task-actions">
+                    ${status !== 'backlog' ? `<button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}', 'prev')">←</button>` : ''}
+                    ${status !== 'done' ? `<button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}', 'next')">→</button>` : ''}
+                </div>
             </div>
         `).join('');
         
@@ -192,6 +196,23 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function moveTask(taskId, direction) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    const statusOrder = ['backlog', 'inprogress', 'review', 'done'];
+    const currentIndex = statusOrder.indexOf(task.status);
+    
+    if (direction === 'next' && currentIndex < statusOrder.length - 1) {
+        task.status = statusOrder[currentIndex + 1];
+    } else if (direction === 'prev' && currentIndex > 0) {
+        task.status = statusOrder[currentIndex - 1];
+    }
+    
+    renderBoard();
+    console.log('Task moved to:', task.status);
 }
 
 console.log('Belladonna Board v2 loaded');
