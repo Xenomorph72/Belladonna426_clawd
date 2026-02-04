@@ -208,7 +208,10 @@ function setupEventListeners() {
   // Delete button
   const deleteBtn = document.getElementById('deleteTask');
   if (deleteBtn) {
+    console.log('Delete button found, attaching listener');
     deleteBtn.addEventListener('click', deleteTask);
+  } else {
+    console.log('Delete button NOT found!');
   }
 }
 
@@ -286,13 +289,28 @@ async function saveTask() {
 }
 
 async function deleteTask() {
+  console.log('Delete clicked!');
   const taskId = document.getElementById('taskId').value;
-  if (!taskId) return;
+  console.log('Task ID:', taskId);
+  if (!taskId) {
+    console.log('No task ID');
+    return;
+  }
   
-  if (!confirm('Delete this task?')) return;
+  if (!confirm('Delete this task?')) {
+    console.log('Cancelled');
+    return;
+  }
   
-  await deleteTaskFromFirebase(taskId);
-  showToast('Task deleted', 'info');
+  console.log('Deleting...');
+  try {
+    await deleteTaskFromFirebase(taskId);
+    showToast('Task deleted', 'info');
+    console.log('Deleted successfully');
+  } catch (err) {
+    console.error('Delete failed:', err);
+    showToast('Delete failed', 'error');
+  }
   closeTaskModal();
 }
 
