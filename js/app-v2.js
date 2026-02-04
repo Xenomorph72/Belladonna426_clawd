@@ -49,6 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const debug = document.getElementById('debug-status');
     if (debug) debug.textContent = 'JavaScript loaded!';
     console.log('Belladonna Board loading...');
+    
+    // Check localStorage
+    const saved = localStorage.getItem('belladonna-board-tasks');
+    console.log('localStorage exists:', !!saved);
+    if (saved) {
+        console.log('localStorage length:', saved.length, 'chars');
+    }
+    
     renderBoard();
     setupEventListeners();
     if (debug) debug.textContent = 'Board rendered!';
@@ -56,6 +64,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function renderBoard() {
     const columns = ['backlog', 'inprogress', 'review', 'done'];
+    
+    // Update task count debug
+    const countDebug = document.getElementById('task-count');
+    if (countDebug) countDebug.textContent = `Tasks: ${tasks.length} | localStorage: ${localStorage.getItem('belladonna-board-tasks') ? 'YES' : 'NO'}`;
     
     columns.forEach(status => {
         const taskList = document.getElementById(status);
